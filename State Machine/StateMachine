@@ -1,0 +1,151 @@
+
+
+##===================================================================
+## Transitions
+
+class StateTransition(object):
+    def __init__(self, toState):
+        self.toState = toState
+
+    def execute(self):
+        print "Transitoning..."
+
+##===================================================================
+## States
+
+class State(object):
+    def __init__(self, StateMachine):
+        self.StateMachine = StateMachine
+
+    def enter(self):
+        pass
+
+    def execute(self):
+        pass
+        
+    def exit(self):
+        pass
+
+class StartState(object):
+    def __init__(self, StateMachine):
+        super(StartState, self).__init__(StateMachine)
+
+    def enter(self):
+        ##Call GUI_Manager to display the Start Menu
+        ##
+
+    def execute(self):
+        pass
+        
+    def exit(self):
+        pass
+
+class TransitionState(object):
+    def __init__(self, StateMachine):
+        super(TransitionState, self).__init__(StateMachine)
+
+    def enter(self):
+        
+
+    def execute(self):
+        pass
+        
+    def exit(self):
+        pass
+
+class ReadState(object):
+    def __init__(self, StateMachine):
+        super(ReadState, self).__init__(StateMachine)
+
+    def enter(self):
+        
+
+    def execute(self):
+        pass
+        
+    def exit(self):
+        pass
+
+class WaitState(object):
+    def __init__(self, StateMachine):
+        super(WaitState, self).__init__(StateMachine)
+
+    def enter(self):
+        
+
+    def execute(self):
+        pass
+        
+    def exit(self):
+        pass
+
+
+##===================================================================
+## Finite State Machine
+
+class StateMachine(object):
+    def __init__(self, character):
+        self.char = character
+        self.states = {}
+        self.transitions = {}
+        self.curState = None
+        self.prevState = None
+        self.trans = None
+
+    def addTransition(self, transName, transition):
+        self.transitions[transName] = transition
+
+    def addState(self, stateName, state):
+        self.states[stateName] = state
+
+    def setState(self, stateName):
+        self.prevState = self.curState
+        self.curState = self.states[stateName]
+
+    def toTransition(self, toTrans):
+        self.trans = self.transitions[toTrans]
+
+    def execute(self):
+        if(self.trans):
+            self.curState.Exit()
+            self.trans.Execute()
+            self.SetState(self.trans.toState)
+            self.curState.Enter()
+            self.trans = None
+        self.curState.Execute()
+
+##===================================================================
+## GameState
+
+Char = type ("Char", (object,), {})
+
+class GameState(Char):
+    def __init__(self):
+        self.StateMachine = StateMachine(self)
+
+        ## States
+        self.StateMachine.AddState("StartState", StartState(self.StateMachine))
+        self.StateMachine.AddState("TransitionState", TransitionState(self.StateMachine))
+        self.StateMachine.AddState("ReadState", ReadState(self.StateMachine))
+        self.StateMachine.AddState("WaitState", WaitState(self.StateMachine))
+
+        ## Transitions
+        self.StateMachine.AddTransition("toStartState", StateTransition("StartState"))
+        self.StateMachine.AddTransition("toTransitionState", StateTransition("TransitionState"))
+        self.StateMachine.AddTransition("toReadState", StateTransition("ReadState"))
+        self.StateMachine.AddTransition("toWaitState", StateTransition("WaitState"))
+
+        self.FSM.SetState("Start")
+
+    def Execute(self):
+        self.FSM.Execute()
+
+if __name__ == '__main__':
+    r = RobotMaid()
+    for i in xrange(20):
+        startTime = clock()
+        timeInterval = 1
+        while(startTime + timeInterval > clock()):
+            pass
+        r.Execute()
+
