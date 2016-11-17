@@ -31,13 +31,17 @@ class StartState(object):
         super(StartState, self).__init__(StateMachine)
 
     def enter(self):
-        ##Call GUI_Manager to display the Start Menu
-        ##
+        ##Call GameState.GUI_Manager to display the Start Menu
+        pass
 
     def execute(self):
+        ##Wait until the user makes a playthrough choice
+        ##On New Game, call GameState.UserFile_Manager to create a new save file, then set transition to TransitionState
+        ##On Load Game, call GameState.UserFile_Manager to load existing save, then set transition to TransitionState
         pass
         
     def exit(self):
+        ##Call GameState.GUI_Manager to close the start menu, open the game menu
         pass
 
 class TransitionState(object):
@@ -45,9 +49,10 @@ class TransitionState(object):
         super(TransitionState, self).__init__(StateMachine)
 
     def enter(self):
-        
+        pass
 
     def execute(self):
+        ##Call GameState.DataFile_Handler to open the sent DataFile name, set transition to ReadState
         pass
         
     def exit(self):
@@ -59,8 +64,14 @@ class ReadState(object):
 
     def enter(self):
         
+        pass
 
     def execute(self):
+        ##Call GameState.DataFile_Handler to parse keyword
+        ##Depending on the returned value, set transition to:
+            ##On ENC, WaitState
+            ##On FIN, TransitionState
+            ##On Anything else, ReadState
         pass
         
     def exit(self):
@@ -71,9 +82,10 @@ class WaitState(object):
         super(WaitState, self).__init__(StateMachine)
 
     def enter(self):
-        
+        pass
 
     def execute(self):
+        ##Wait for user choice, print user choice, clear buttons, set line number to appropriate position
         pass
         
     def exit(self):
@@ -141,11 +153,7 @@ class GameState(Char):
         self.FSM.Execute()
 
 if __name__ == '__main__':
-    r = RobotMaid()
-    for i in xrange(20):
-        startTime = clock()
-        timeInterval = 1
-        while(startTime + timeInterval > clock()):
-            pass
-        r.Execute()
+    game = GameState()
+    
+    game.Execute()
 
