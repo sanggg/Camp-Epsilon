@@ -1,4 +1,4 @@
-#Version 0.0.1
+#Version 0.0.11
 from Tkinter import *
 import tkFont
 from PIL import ImageTk, Image
@@ -77,9 +77,11 @@ class GUI_Manager:
         self.textbox.pack() #pack frame into main window
         self.scroll = Scrollbar(self.textbox)   #create scrollbar 
         self.scroll.pack(side = RIGHT, fill = Y)#pack scrollbar into window
-        self.canvas = Canvas(self.textbox, scrollregion = (0,1000,200,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
+        self.canvas = Canvas(self.textbox, scrollregion = (0,0,0,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
         self.canvas.pack(side = LEFT)#pack canvas left side of frame
-        
+        self.scroll.config( command = self.canvas.yview)
+        self.button = Button(self.textbox,command = (lambda:self.GUI_HandlerDSC("Carrots are a rabbits favorite food.But too much is bad.")))#testing
+        self.button.pack(side = BOTTOM)#testing will delete
         
     def start(self,name):
         #files = userFile.getFileNames() #get name of save files
@@ -121,7 +123,5 @@ class GUI_Manager:
     def GUI_HandlerDSC(self,description):
         DSCfont = tkFont.Font(size = 15)    #create custom font
         self.canvas.create_text(10,self.y,fill = "blue",text = description, font = DSCfont)#create text to put onto canvas
-        self.canvas.create_text(150,150,fill = "blue",text = "kokoko", font = DSCfont)  #testing will delete
         self.y += 50    #update y coordinate for adding text to canvas.
-        self.canvas.create_text(50,50,fill = "blue",text = "20 dogs chase red cars while cats rain from above", font = DSCfont)#testing will delete
-        print "hi" #testing will delete
+        self.canvas.create_text(50,self.y+25,fill = "blue",text = "20 dogs chase red cars while cats rain from above", font = DSCfont)#testing will delete
