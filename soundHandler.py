@@ -51,7 +51,8 @@ class soundHandler():
             self.music = False               #set flag to false
         else:
             mixer.music.set_volume(1.0) #set music volume to 1.0(max volume)
-            mixer.music.load(musicfile) #load music file again for volume to change
+            if(self.musicfile != ""):
+                mixer.music.load(self.musicfile) #load music file again for volume to change
             self.music = True                #set flag to true
 
     #Used when sfx is toggled on or off in options
