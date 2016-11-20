@@ -1,9 +1,16 @@
-#Version 0.0.11
+#Version 0.0.3
 from Tkinter import *
 import tkFont
 from PIL import ImageTk, Image
 from soundHandler import soundHandler
 #from UserFile_Handler import UserFile_Handler
+
+class Choice:
+    answers = []
+    results = []
+    def setChoice(self,answer,result):
+        self.answers.append(answer)
+        self.results.append(result)
 
 class GUI_Manager:
     #userFile = UserFile_Handler()  #object for userfile. used for getting save files and creating new saves
@@ -72,7 +79,9 @@ class GUI_Manager:
         confirm.place(x = 125,y = 135)  #Set buttons
         buttonReturn = Button(self.entry, text = "Return to Menu", command = (lambda:self.newToStart()), font  = buttonFont)#create button for returning to start screen
         buttonReturn.place(x = 90, y = 185) #place button to popup window
-        self.textbox = Frame(self.root) #Create frame that will hold text in the game
+        self.gameScreen = Frame(self.root)
+        self.gameScreen.pack()
+        self.textbox = Frame(self.gameScreen) #Create frame that will hold text in the game
         self.textbox.config(height = 500, width = 500)  #Set dimensions for frame
         self.textbox.pack() #pack frame into main window
         self.scroll = Scrollbar(self.textbox)   #create scrollbar 
@@ -80,8 +89,13 @@ class GUI_Manager:
         self.canvas = Canvas(self.textbox, scrollregion = (0,0,0,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
         self.canvas.pack(side = LEFT)#pack canvas left side of frame
         self.scroll.config( command = self.canvas.yview)
-        self.button = Button(self.textbox,command = (lambda:self.GUI_HandlerDSC("Carrots are a rabbits favorite food.But too much is bad.")))#testing
-        self.button.pack(side = BOTTOM)#testing will delete
+        self.GUI_HandlerBKG("")
+        choco = Choice()
+        choco.setChoice("Marry the dog and give me the dsc.",0)
+        choco.setChoice("Scary monster ate slab and gave me a dsc.",0)
+        choco.setChoice("Marry the dog and give me the bones.",0)
+        choco.setChoice("Marry the dog and give me the bananas.",0)
+        self.GUI_HandlerCHC(choco)
         
     def start(self,name):
         #files = userFile.getFileNames() #get name of save files
@@ -104,7 +118,7 @@ class GUI_Manager:
             print name #test will delete
             #self.userFile.saveFile(name)   #create save file
             self.entry.destroy()    #destroy window
-            self.GUI_HandlerDSC("Hi")   #testing writing on canvas will delete
+            self.GUI_HandlerDSC("Sly fox laughs at wierd songs while jumping over lava pits.")   #testing writing on canvas will delete
 
     #Method to move new game to start screen
     def newToStart(self):
@@ -119,9 +133,43 @@ class GUI_Manager:
         pass #placeholder will delete
 
     #method that handles description keyword lines
-    #Current bug: Text is not writing to canvas.
+    #Current bug: Text maybe shown incorrect. Examples: Text maybe overlapped with other text(Max line limit is 2 in size 15 font).
+    #Current format for create_text(X coordinate(I think the coordinate is middle of text),Ycoordinate, font color, font, max width of text in pixels,text is centered so that left side is (x,y))
     def GUI_HandlerDSC(self,description):
         DSCfont = tkFont.Font(size = 15)    #create custom font
-        self.canvas.create_text(10,self.y,fill = "blue",text = description, font = DSCfont)#create text to put onto canvas
+        self.canvas.create_text(0,self.y,fill = "blue",text = description, font = DSCfont,width = 300,anchor = W)#create text to put onto canvas
         self.y += 50    #update y coordinate for adding text to canvas.
-        self.canvas.create_text(50,self.y+25,fill = "blue",text = "20 dogs chase red cars while cats rain from above", font = DSCfont)#testing will delete
+
+    #method handles npc keyword lines
+    #Has same bugs as description does. Create_text format is same too.
+    def GUI_HandlerNPC(self,dialouge):
+        NPCfont = tkFont.Font(size = 15)
+        self.canvas.create_text(0,self.y,fill = "green", text = dialouge, font = NPCfont,width = 300,anchor = W)
+        self.y += 50
+
+    #method handles choice keywords lines
+    def GUI_HandlerCHC(self,choice):
+        CHCfont = tkFont.Font(size = 13)
+        self.buttonFrame = Frame(self.gameScreen)
+        self.buttonFrame.pack(side = BOTTOM)
+        buttons = []
+        for x in range(0,len(choice.answers)):
+            buttons.append(Button(self.buttonFrame,text = choice.answers[x], font = CHCfont,command = (lambda: self.buttonClick(choice.results[x]))))
+
+        buttons[0].grid(row = 0, column = 0)
+        buttons[1].grid(row = 0, column = 1)
+        buttons[2].grid(row = 1, column = 0)
+        buttons[3].grid(row = 1, column = 1)
+
+    #method for backgrounds
+    #Maybe do background frames for left and right of textbox
+    def GUI_HandlerBKG(self,background):
+        self.back = Frame(self.gameScreen,bg = "blue")
+        self.back.pack(side = LEFT)
+        #self.test = Canvas(self.back,height = 
+
+    def GUI_HandlerMUS(self,music):
+        soundPlayer.updateMusic(music)
+
+    def GUI_HandlerSFX(self,sound):
+        soundPlayer.playSound(sound)
