@@ -14,7 +14,6 @@ class GameState(Char):
         self.DataFile = DataFile_Handler("ACT1.txt")
         self.Keyword = ""
         self.Line = ""
-        self.StateMachine = StateMachine(self)
 
         ## States
         self.StateMachine.addState("StartState", StartState(self.StateMachine))
@@ -43,10 +42,11 @@ class GameState(Char):
         pass
 
     def callDataFile_Handler(self):
-        self.Line = self.DataFile.keyword_Handler(-1)
+        self.Line = self.DataFile.keyword_Handler()
         #if(isinstance(self.Line, list)):
         #    self.Keyword = self.Line[0]
         #print(type(self.Line))
+        self.DataFile.updateLine()
         print (self.Line)
 
     def DataFile_DSC_Handler(self):
