@@ -1,5 +1,7 @@
 from StateMachine import *
 from DataFile_Handler import *
+from time import clock
+##import GUI_Manager
 
 ##===================================================================
 ## GameState
@@ -12,6 +14,7 @@ class GameState(Char):
         self.DataFile = DataFile_Handler("ACT1.txt")
         self.Keyword = ""
         self.Line = ""
+        self.StateMachine = StateMachine(self)
 
         ## States
         self.StateMachine.addState("StartState", StartState(self.StateMachine))
@@ -76,16 +79,11 @@ class GameState(Char):
     def DataFile_FIN_Handler():
         pass
 
-    
-
     #def UserFile_FIN_Handler(self):  #player name, data file, likeability
     #    DataFile.endAct(self.line[1])
     #    act = DataFile.GetAct()
     #    UserFile.updateUser([UserFile.getName(), DataFile.getAct(), UserFile.getLikeabilty()])
     #    UserFile.SaveFile()
-
-    
-
 
 if __name__ == '__main__':
     game = GameState()
@@ -95,4 +93,3 @@ if __name__ == '__main__':
         while(startTime + timeInterval > clock()):
             pass
         game.execute()
-    
