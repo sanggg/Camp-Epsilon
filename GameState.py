@@ -1,7 +1,7 @@
 from StateMachine import *
 from DataFile_Handler import *
 from time import clock
-##import GUI_Manager
+##from GUI_Manager import *
 
 ##===================================================================
 ## GameState

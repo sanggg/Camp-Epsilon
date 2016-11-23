@@ -1,4 +1,5 @@
-
+from time import clock
+from GameState import *
 
 ##===================================================================
 ## Transitions
@@ -8,11 +9,12 @@ class StateTransition(object):
         self.toState = toState
 
     def execute(self):
-        print "Transitoning..."
+        pass
 
 ##===================================================================
 ## States
 
+##Base class for states
 class State(object):
     def __init__(self, StateMachine):
         self.StateMachine = StateMachine
@@ -38,6 +40,7 @@ class StartState(State):
         ##Wait until the user makes a playthrough choice
         ##On New Game, call GameState.UserFile_Manager to create a new save file, then set transition to TransitionState
         ##On Load Game, call GameState.UserFile_Manager to load existing save, then set transition to TransitionState
+        self.StateMachine.toTransition("toTransitionState")
         pass
         
     def exit(self):
@@ -53,6 +56,7 @@ class TransitionState(State):
 
     def execute(self):
         ##Call GameState.DataFile_Handler to open the sent DataFile name, set transition to ReadState
+        self.StateMachine.toTransition("toReadState")
         pass
         
     def exit(self):
@@ -63,7 +67,7 @@ class ReadState(State):
         super(ReadState, self).__init__(StateMachine)
 
     def enter(self):
-        
+
         pass
 
     def execute(self):
@@ -72,6 +76,8 @@ class ReadState(State):
             ##On ENC, WaitState
             ##On FIN, TransitionState
             ##On Anything else, ReadState
+        self.StateMachine.GameState.callDataFile_Handler()
+        self.StateMachine.toTransition("toReadState")
         pass
         
     def exit(self):
@@ -86,6 +92,7 @@ class WaitState(State):
 
     def execute(self):
         ##Wait for user choice, print user choice, clear buttons, set line number to appropriate position
+        self.StateMachine.toTransition("toReadState")
         pass
         
     def exit(self):
@@ -96,13 +103,18 @@ class WaitState(State):
 ## Finite State Machine
 
 class StateMachine(object):
-    def __init__(self, character):
+    def __init__(self, character, GameState):
+        
+        ## Initialize state data
         self.char = character
         self.states = {}
         self.transitions = {}
         self.curState = None
         self.prevState = None
         self.trans = None
+
+        ##Initialize Reference to Game State
+        self.GameState = GameState
 
     def addTransition(self, transName, transition):
         self.transitions[transName] = transition
@@ -125,35 +137,3 @@ class StateMachine(object):
             self.curState.enter()
             self.trans = None
         self.curState.execute()
-
-##===================================================================
-## GameState
-
-##Char = type ("Char", (object,), {})
-
-##class GameState(Char):
-##    def __init__(self):
-##        self.StateMachine = StateMachine(self)
-
-        ## States
-##        self.StateMachine.AddState("StartState", StartState(self.StateMachine))
-##        self.StateMachine.AddState("TransitionState", TransitionState(self.StateMachine))
-##        self.StateMachine.AddState("ReadState", ReadState(self.StateMachine))
-##        self.StateMachine.AddState("WaitState", WaitState(self.StateMachine))
-
-        ## Transitions
-##        self.StateMachine.AddTransition("toStartState", StateTransition("StartState"))
-##        self.StateMachine.AddTransition("toTransitionState", StateTransition("TransitionState"))
-##        self.StateMachine.AddTransition("toReadState", StateTransition("ReadState"))
-##        self.StateMachine.AddTransition("toWaitState", StateTransition("WaitState"))
-
-##       self.FSM.SetState("Start")
-
-##    def Execute(self):
-##        self.FSM.Execute()
-
-##if __name__ == '__main__':
-##   game = GameState()
-    
-##    game.Execute()
-
