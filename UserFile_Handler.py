@@ -10,7 +10,7 @@ class UserFile_Handler():
 		self.setPlayerName(name)
 		self.setLike(0)
 		
-	def updateHandler(self, fileData):
+	def updateUser(self, fileData):
 		self.setDataFile(fileData[1])
 		self.setPlayerName(fileData[0])
 		self.setLike(int(fileData[2]))
@@ -39,8 +39,11 @@ class UserFile_Handler():
 	def setLike(self, num):
 		self.Likability = num
 		
-	def updateLike(self, num):
-		self.setLike(self.getLike() + num)
+	def updateLike(self, changeInValue):
+		if(changeInValue == 0):
+			self.Likability = self.Likability - 1
+		else:
+			self.Likability = self.Likability + 1
 		
 	def getLike(self):
 		return self.Likability
@@ -53,7 +56,7 @@ class UserFile_Handler():
 		for line in fd:
 			currLine = line.split("_")
 			if(currLine[0] == fileName):
-				self.updateHandler(currLine)
+				self.updateUser(currLine)
 				fd.close()
 				return True
 		
