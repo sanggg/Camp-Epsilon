@@ -1,20 +1,9 @@
 #Version 0.0.8
 from Tkinter import *
 import tkFont
-from PIL import ImageTk, Image
 from soundHandler import soundHandler
-#from UserFile_Handler import UserFile_Handler
-
-#Used for testing will delete this class
-class Choice:
-    answers = []
-    results = []
-    def setChoice(self,answer,result):
-        self.answers.append(answer)
-        self.results.append(result)
 
 class GUI_Manager:
-    #userFile = UserFile_Handler()  #object for userfile. used for getting save files and creating new saves
     soundPlayer = soundHandler()    #object for soundHandler. used to play music and sound effects
     
     y = 50  #y coordinate to place text on canvas
@@ -41,7 +30,7 @@ class GUI_Manager:
         #soundplayer.updateMusic(placeholder)               #play music on screen
 
     #Method that creates the load screen for the game. 
-    def loadGame(self):
+    def loadGame(self,names):
         self.startScreen.pack_forget()                      #Take away frame that holds starts screen stuff from window
         self.loadScreen = Frame(self.root,bg = "black")     #Create new frame that holds stuff for load screen
         self.loadScreen.config(height = 500, width = 500)   #Set dimensions
@@ -53,13 +42,9 @@ class GUI_Manager:
         files = []                                          #list that will hold butttons for save files
         counter = 0                                         #used in placing buttons
         ycoord = 100                                        #y coordinate to place buttons
-        #saveFiles = userFile.getFileNames()                #Called to get save files 
-        names = ["bill","mandy","edd","dora","jimmy"]       #Test list for names. Will delete later
-        #names= []
         self.filename =""
         for name in names:                                  #For loop that goes through all file names 
             files.append(Button(self.loadScreen, text = name,font = buttonFont,command = lambda:(self.setfile(name))))#Testing. Will delete later.
-            #files.append(Button(self.loadScreen, text = name,font = buttonFont,command = lambda: userFile.loadFile(name)))#Creates buttons that will tell userFile_Handler to load file
             files[counter].place(x = 450, y = ycoord)    #Place button in frame
             counter += 1 #update counter
             ycoord += 60 #update y coordinate
@@ -68,10 +53,6 @@ class GUI_Manager:
             warning.place(height = 90,width  = 500,relx = .25, rely = .30)
         buttonReturn = Button(self.loadScreen, text = "Return to start", command = lambda: self.LoadToStart(),font = buttonFont)#Button to return to start screen
         buttonReturn.place(height = 100, width = 200, x= 400, y = 400)#place button and set dimensions
-        buttonLoad = Button(self.loadScreen, text = "Load Game", command = lambda: self.userfile.loadFile(self.filename),font = buttonFont)#Button to load save file 
-        buttonLoad.place(height = 100, width = 200, x= 700, y = 400)#place button and set dimensions
-        buttonDelete = Button(self.loadScreen, text = "Delete Game", command = lambda: self.userfile.DeleteFile(self.filename),font = buttonFont)#Button to load save file 
-        buttonDelete.place(height = 100, width = 200, x= 100, y = 400)#place button and set dimensions
 
     #Method used to get file name from to pass to user file
     def setfile(self,name):
@@ -102,49 +83,31 @@ class GUI_Manager:
         self.canvas = Canvas(self.textbox, scrollregion = (0,0,0,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
         self.canvas.pack(side = LEFT)                                   #pack canvas left side of frame
         self.scroll.config( command = self.canvas.yview)                #set the scrollbar change the canvas
-        option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont) #create button for options
+        logo = PhotoImage(file = 'python_logo.gif')
+        option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont,width = 10, height = 5) #create button for options
+        #option.config(image = logo, compound = LEFT)
         option.pack()                                                   #pack button into frame
         self.GUI_HandlerBKG("")#Test stuff will delete
-        #self.GUI_HandlerDSC("*Static interrupts the voice on the other end. The static dies out after a few moments.*")#Test stuff will delete
-        self.GUI_HandlerNPC("What if I can't find anyone else?")#Test stuff will delete
-        choco = Choice()#Test stuff will delete
-        choco.setChoice("I'll come running like Indiana Jones to rescue you!",0)#Test stuff will delete
-        choco.setChoice("You'll have to find a way to get out of there ",0)#Test stuff will delete
-        self.GUI_HandlerCHC(choco)#Test stuff will delete
+        a = "I'll come running like Indiana Jones to rescue you!"#Test stuff will delete
+        b ="You'll have to find a way to get out of there "#Test stuff will delete
+        #self.GUI_HandlerCHC(0,a,0,b)#Test stuff will delete
         
     def start(self,name):
-        #files = userFile.getFileNames() #get name of save files
-        room = True     #flag if theres room for save files
-        dupe = False    #flag if theres already save file with current 
-        files = ['billy','edd','mandy','matt'] #test list will delete later
-        for names in files:     #for loop tht goes through names. 
-            if(names == name):  #If variable name =s one them set flag to true
-                dupe = True
-                break           #break loop
-        if(len(files) == 5):    #if length of list with names = 5 then set room flag to false
-            room = False
-        if(dupe):   #if the name entry is a already exists as save file. case matters.place warning label
-            dupeWarning = Label(self.entry,text = "A file with this name already exists",justify = CENTER)
-            dupeWarning.place(x = 50,y = 70)
-        if(room == False):#if the max limit of files is reached place warning label.
-            roomWarning = Label(self.entry,text = "Max number of save files reached. Please return to Start Menu and go to Load Game to delete a file.",wraplength = 205,justify = CENTER)
-            roomWarning.place(x = 50,y = 90)
-        if( room and dupe == False):#if both flags don't trip errors
-            #self.userFile.saveFile(name)   #create save file
-            self.entry.destroy()    #destroy window
+        #self.userFile.saveFile(name)   #create save file
+        self.entry.destroy()    #destroy window
 
     #method for when choice buttons are clicked
     def buttonClick(self,lineNumber):
-        #dataFile.CurrentLine = lineNumber  #update currentline
         self.buttonFrame.destroy()         #destroy frame that holds choice buttons
+        return lineNumber
 
     def optionMenu(self):
-        buttonFont = tkFont.Font(size = 15)
+        buttonFont = tkFont.Font(family = "times",size = 15)
         self.options = Toplevel(self.root,height = 250, width = 300)
         self.options.title("Option Menu")
-        toggleMUS = Button(self.options, text = "Toggle Music", command = (lambda:self.soundPlayer.toggleMusic()), font  = buttonFont)
+        toggleMUS = Button(self.options, text = "Music On/Off", command = (lambda:self.soundPlayer.toggleMusic()), font  = buttonFont)
         toggleMUS.pack()
-        toggleSE = Button(self.options, text = "Toggle Sound Effects", command = (lambda:self.soundPlayer.toggleSFX()), font  = buttonFont)
+        toggleSE = Button(self.options, text = "Sound Effects On/Off", command = (lambda:self.soundPlayer.toggleSFX()), font  = buttonFont)
         toggleSE.pack()
         closeOptions = Button(self.options, text = "Return to Game", command = (lambda:self.options.destroy()), font  = buttonFont)
         closeOptions.pack()
@@ -182,16 +145,15 @@ class GUI_Manager:
         self.y += 50
 
     #method handles choice keywords lines
-    def GUI_HandlerCHC(self,choice):
+    def GUI_HandlerCHC(self,lineA,stringA,lineB,stringB):
         CHCfont = tkFont.Font(size = 13)            #Create custom font for choices
         self.buttonFrame = Frame(self.gameScreen)   #Create frame for buttons
         self.buttonFrame.pack(side = BOTTOM)        #place frame on bottom of gamescreen
-        buttons = []
-        for x in range(0,len(choice.answers)):
-            buttons.append(Button(self.buttonFrame,text = choice.answers[x], font = CHCfont,wraplength = 240,command = (lambda: self.buttonClick(choice.results[x]))))
+        buttonA = Button(self.buttonFrame,text = stringA, font = CHCfont,wraplength = 200,command = (lambda: self.buttonClick(lineA)),height = 3,width = 25)
+        buttonB = Button(self.buttonFrame,text = stringB, font = CHCfont,wraplength = 200,command = (lambda: self.buttonClick(lineB)),height = 3,width = 25)
 
-        buttons[0].grid(row = 0, column = 0)        #Place buttons 
-        buttons[1].grid(row = 0, column = 1)
+        buttonA.grid(row = 0, column = 0)        #Place buttons 
+        buttonB.grid(row = 0, column = 1)
 
     #method for backgrounds
     #Maybe do background frames for left and right of textbox
