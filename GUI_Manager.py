@@ -5,8 +5,9 @@ from soundHandler import soundHandler
 
 class GUI_Manager:
     soundPlayer = soundHandler()    #object for soundHandler. used to play music and sound effects
+    y = 50                          #y coordinate to place text on canvas
+    lineNumber = 0                  #Line number for choice
     
-    y = 50  #y coordinate to place text on canvas
     def __init__(self,master = None):
         self.startScreen = Frame(master)                    #Create a frame to hold stuff for startScreen
         master.minsize(width = 1000,height = 500)           #Set minimum size to main window
@@ -35,21 +36,21 @@ class GUI_Manager:
         self.loadScreen = Frame(self.root,bg = "black")     #Create new frame that holds stuff for load screen
         self.loadScreen.config(height = 500, width = 500)   #Set dimensions
         self.loadScreen.pack(expand = True,fill = BOTH)     #pack screen into window
-        titleFont = tkFont.Font(size = 30)
+        titleFont = tkFont.Font(size = 30)                  #Set font for titles
         buttonFont = tkFont.Font(size = 18)                 #Set font size
-        title = Label(self.loadScreen,text = "Save File Menu",font = titleFont,bg = "black",fg = "red")
+        title = Label(self.loadScreen,text = "Save File Menu",font = titleFont,fg = "red") #Create label for load screen table
         title.place(height = 90,width = 300, relx = .35, rely = .007)
         files = []                                          #list that will hold butttons for save files
         counter = 0                                         #used in placing buttons
         ycoord = 100                                        #y coordinate to place buttons
-        self.filename =""
+        self.filename =""                                   #Create var to hold save file
         for name in names:                                  #For loop that goes through all file names 
-            files.append(Button(self.loadScreen, text = name,font = buttonFont,command = lambda:(self.setfile(name))))#Testing. Will delete later.
+            files.append(Button(self.loadScreen, text = name,font = buttonFont,command = lambda:(self.setfile(name))))#Creates button with save file name
             files[counter].place(x = 450, y = ycoord)    #Place button in frame
             counter += 1 #update counter
             ycoord += 60 #update y coordinate
         if(len(files) == 0):
-            warning = Label(self.loadScreen,text = "No Saves Availiable",font = titleFont,bg = "black",fg = "red")
+            warning = Label(self.loadScreen,text = "No Saves Availiable",font = titleFont,fg = "red")#Create label for when saves are found
             warning.place(height = 90,width  = 500,relx = .25, rely = .30)
         buttonReturn = Button(self.loadScreen, text = "Return to start", command = lambda: self.LoadToStart(),font = buttonFont)#Button to return to start screen
         buttonReturn.place(height = 100, width = 200, x= 400, y = 400)#place button and set dimensions
@@ -87,7 +88,7 @@ class GUI_Manager:
         option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont,width = 10, height = 5) #create button for options
         #option.config(image = logo, compound = LEFT)
         option.pack()                                                   #pack button into frame
-        self.GUI_HandlerBKG("")#Test stuff will delete
+        self.GUI_HandlerBKG("")                                         #Used to 
         a = "I'll come running like Indiana Jones to rescue you!"#Test stuff will delete
         b ="You'll have to find a way to get out of there "#Test stuff will delete
         #self.GUI_HandlerCHC(0,a,0,b)#Test stuff will delete
@@ -97,9 +98,9 @@ class GUI_Manager:
         self.entry.destroy()    #destroy window
 
     #method for when choice buttons are clicked
-    def buttonClick(self,lineNumber):
+    def buttonClick(self,number):
         self.buttonFrame.destroy()         #destroy frame that holds choice buttons
-        return lineNumber
+        self.lineNumber = number
 
     def optionMenu(self):
         buttonFont = tkFont.Font(family = "times",size = 15)
