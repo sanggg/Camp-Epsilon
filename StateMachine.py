@@ -34,7 +34,6 @@ class StartState(State):
 
     def enter(self):
         ##Call GameState.GUI_Manager to display the Start Menu
-        pass
 
     def execute(self):
         ##Wait until the user makes a playthrough choice

@@ -1,7 +1,8 @@
 from StateMachine import *
 from DataFile_Handler import *
 from time import clock
-##from GUI_Manager import *
+from GUI_Manager import *
+from Tkinter import *
 
 ##===================================================================
 ## GameState
@@ -9,11 +10,15 @@ from time import clock
 Char = type ("Char", (object,), {})
 
 class GameState(Char):
-    def __init__(self):
+    def __init__(self, master = None):
         self.StateMachine = StateMachine(self, self)
         self.DataFile = DataFile_Handler("ACT1.txt")
         self.Keyword = ""
         self.Line = ""
+
+        ## GUI_Manager
+        self.tk = tkinter
+        self.GUI_Manager = GUI_Manager
 
         ## States
         self.StateMachine.addState("StartState", StartState(self.StateMachine))
