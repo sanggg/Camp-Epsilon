@@ -10,7 +10,7 @@ from Tkinter import *
 Char = type ("Char", (object,), {})
 
 class GameState(Char):
-    def __init__(self, master = None):
+    def __init__(self):
         self.StateMachine = StateMachine(self, self)
         self.DataFile = DataFile_Handler("ACT1.txt")
         self.Keyword = ""
