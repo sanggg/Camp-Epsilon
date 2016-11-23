@@ -1,10 +1,10 @@
 #Version 0.0.8
 from Tkinter import *
 import tkFont
-from soundHandler import soundHandler
+##from soundHandler import soundHandler
 
 class GUI_Manager:
-    soundPlayer = soundHandler()    #object for soundHandler. used to play music and sound effects
+    ##soundPlayer = soundHandler()    #object for soundHandler. used to play music and sound effects
     y = 50                          #y coordinate to place text on canvas
     lineNumber = 0                  #Line number for choice
     
