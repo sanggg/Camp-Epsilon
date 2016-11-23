@@ -1,5 +1,5 @@
 import linecache
-import Choice
+#import Choice
 
 class DataFile_Handler():
 	CurrentDataFile = ""
