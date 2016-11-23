@@ -10,6 +10,7 @@ class DataFile_Handler():
 		self.newAct(filepath)
 
 	def newAct(self, filepath):
+		linecache.clearcache()
 		self.CurrentDataFile = filepath
 		self.NextAct = 0
 		self.CurrentLine = 0
