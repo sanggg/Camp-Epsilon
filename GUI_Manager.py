@@ -9,12 +9,12 @@ class GUI_Manager:
     lineNumber = 0                  #Line number for choice
     
     def __init__(self,master = None):
-        self.startScreen = Frame(master)                    #Create a frame to hold stuff for startScreen
-        master.minsize(width = 1000,height = 500)           #Set minimum size to main window
-        self.root = master                                  #Save tk object to loal var 
-        self.startScreen.config(height = 500, width = 500)  #Set dimensions for start screen
-        master.resizable(width = False, height = False)     #Make window not resizable 
-        self.startScreen.pack()                             #pack strartscreen into window
+        self.main_frame = ttk.Frame(master)                 #Create the main frame
+        self.main_frame.pack()                              #Packing the frame into position
+        self.main_frame.config(height = 600, width = 1000)  #Set the height and width of the frame
+        self.main_frame.config(relief = RIDGE)              #Stylizing the border of the frame
+        self.main_frame.config(padding = (15, 15))          #Gives padding for the frame
+        master.resizable(width = False, height = False)     #Makes the screen not resizable
 
     #Method creates the startscreen for the game
     def startMenu(self):
@@ -160,14 +160,11 @@ class GUI_Manager:
     #Maybe do background frames for left and right of textbox
     #Would require the use of two files for each frame tho.
     def GUI_HandlerBKG(self,background):
-        self.back = Frame(self.gameScreen)
-        self.back.place(x=0,y=0)
-        self.test = Canvas(self.back,height = 500, width = 284,bg = "red",bd=0)
-        self.test.pack()
-        self.backR = Frame(self.gameScreen)
-        self.backR.place(x=710,y=0)
-        self.testR = Canvas(self.backR,height = 500, width = 285,bg = "red",bd=0)
-        self.testR.pack()
+        self.bkg_canvas = Canvas(bkg_frame, width = 450, height = 500)      #Sets the canvas for the background
+        self.bkg_canvas.pack(expand = YES, fill = BOTH, side = LEFT)        #Packing the canvas
+        self.bkg = PhotoImage(file = background)                            #Sets background file
+        self.bkg_canvas.create_image(0,0, image = self.bkg, anchor = NW)    #Places background onto the canvas
+        
 
     #Method for music keyword lines
     def GUI_HandlerMUS(self,music):
