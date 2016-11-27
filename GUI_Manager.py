@@ -1,7 +1,8 @@
-#Version 0.0.8
+#Version 0.0.9
 from Tkinter import *
 import tkFont
-from PIL import ImageTk, Image
+import ttk
+#from PIL import ImageTk, Image <-- Probably will not need this
 from soundHandler import soundHandler
 #from UserFile_Handler import UserFile_Handler
 
@@ -19,30 +20,49 @@ class GUI_Manager:
     
     y = 50  #y coordinate to place text on canvas
     def __init__(self,master = None):
-        self.startScreen = Frame(master)                    #Create a frame to hold stuff for startScreen
-        master.minsize(width = 1000,height = 500)           #Set minimum size to main window
+        
+        self.main_frame = ttk.Frame(master)                 #Set main frame, the other three smaller frames will go inside the main frame
+        self.main_frame.pack()                              #Pack the main frame into place
+        self.main_frame.config(height = 600, width = 1000)  #Set the height and width of the main frame
+        self.main_frame.config(relief = RIDGE)              #Style the border
+        self.main_frame.config(padding = (15, 15))          #Add padding to main frame
+
+        self.bkg_frame = ttk.Frame(self.main_frame)                                                     #Set background-frame for gameplay
+        self.bkg_frame.grid(row = 0, column = 0, rowspan = 2, sticky = 'nsew', padx = 10, pady = 10)    #Position the frame and add padding         
+        self.bkg_frame.config(width = 450)                                                              #Set the width of the frame
+        self.bkg_frame.config(relief = RIDGE)                                                           #Style the border
+
+        self.dialog_frame = ttk.Frame(self.main_frame)                                                  #Set dialog-frame for gameplay
+        self.dialog_frame.grid(row = 0, column = 1, sticky = 'nsew', padx = 10, pady = 10)              #Position the frame and add padding
+        self.dialog_frame.config(height = 270, width = 450)                                             #Set height and width of the frame
+        self.dialog_frame.config(relief = RIDGE)                                                        #Style the border
+        
+        self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
+        self.user_frame.grid(row = 1, column = 1, sticky = 'nsew', padx = 10, pady = 10)                #Position the frame and add padding
+        self.user_frame.config(height = 270, width = 450)                                               #Set height and width of the frame
+        self.user_frame.config(relief = RIDGE)                                                          #Style the border                    
+
         self.root = master                                  #Save tk object to loal var 
-        self.startScreen.config(height = 500, width = 500)  #Set dimensions for start screen
         master.resizable(width = False, height = False)     #Make window not resizable 
-        self.startScreen.pack()                             #pack strartscreen into window
+
 
     #Method creates the startscreen for the game
     def startMenu(self):
         buttonFont = tkFont.Font(size = 24)                 #Create custom font for buttons
         titleFont = tkFont.Font(size = 30)                  #Create custom font for buttons
-        buttonStart = Button(self.startScreen, text = "New Game",command = lambda: self.startGame(),font = buttonFont)  #created button for start screen 
+        buttonStart = Button(self.main_frame, text = "New Game",command = lambda: self.startGame(),font = buttonFont)  #created button for start screen 
         buttonStart.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.30, rely = .20)                     #Set button in place, set dimensions
-        buttonCont = Button(self.startScreen, text = "Continue Game",command = lambda: self.loadGame(),font = buttonFont)#create button for load screen
+        buttonCont = Button(self.main_frame, text = "Continue Game",command = lambda: self.loadGame(),font = buttonFont)#create button for load screen
         buttonCont.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.30, rely = .45)                      #set button in place, set dimensions
-        buttonExit = Button(self.startScreen, text = "Exit Game", font = buttonFont)                                    #create button for game exit
+        buttonExit = Button(self.main_frame, text = "Exit Game", font = buttonFont)                                    #create button for game exit
         buttonExit.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.30, rely = .70)                      #set button in place, set dimensions 
-        title = Label(self.startScreen,text = "Camp Epsilon", font = titleFont)                                         #Create label for title
+        title = Label(self.main_frame,text = "Camp Epsilon", font = titleFont)                                         #Create label for title
         title.place(bordermode = OUTSIDE, height = 90, width = 300, relx = 0.20, rely = .007)                           #set label in place and set dimensions
         #soundplayer.updateMusic(placeholder)               #play music on screen
 
     #Method that creates the load screen for the game. 
     def loadGame(self):
-        self.startScreen.pack_forget()                      #Take away frame that holds starts screen stuff from window
+        self.main_frame.pack_forget()                      #Take away frame that holds starts screen stuff from window
         self.loadScreen = Frame(self.root,bg = "black")     #Create new frame that holds stuff for load screen
         self.loadScreen.config(height = 500, width = 500)   #Set dimensions
         self.loadScreen.pack(expand = True,fill = BOTH)     #pack screen into window
@@ -79,7 +99,7 @@ class GUI_Manager:
 
     #Method that creates popup window for file name entry. Changes start screen to game screen
     def startGame(self):
-        self.startScreen.pack_forget()                                  #Take away frame that holds starts screen stuff from window
+        self.main_frame.pack_forget()                                  #Take away frame that holds starts screen stuff from window
         buttonFont = tkFont.Font(size = 15)                             #create custom font for buttons
         self.entry = Toplevel(self.root,height = 250, width = 300)      #Create new window
         self.entry.title("Enter a name")                                #Set title of window. Text thats on top left of window
@@ -102,15 +122,14 @@ class GUI_Manager:
         self.canvas = Canvas(self.textbox, scrollregion = (0,0,0,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
         self.canvas.pack(side = LEFT)                                   #pack canvas left side of frame
         self.scroll.config( command = self.canvas.yview)                #set the scrollbar change the canvas
-        option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont) #create button for options
+        logo = PhotoImage(file = 'python_logo.gif')
+        option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont,width = 10, height = 5) #create button for options
+        #option.config(image = logo, compound = LEFT)
         option.pack()                                                   #pack button into frame
-        self.GUI_HandlerBKG("")#Test stuff will delete
-        #self.GUI_HandlerDSC("*Static interrupts the voice on the other end. The static dies out after a few moments.*")#Test stuff will delete
-        self.GUI_HandlerNPC("What if I can't find anyone else?")#Test stuff will delete
-        choco = Choice()#Test stuff will delete
-        choco.setChoice("I'll come running like Indiana Jones to rescue you!",0)#Test stuff will delete
-        choco.setChoice("You'll have to find a way to get out of there ",0)#Test stuff will delete
-        self.GUI_HandlerCHC(choco)#Test stuff will delete
+        self.GUI_HandlerBKG("")                                         #Used to 
+        a = "I'll come running like Indiana Jones to rescue you!"#Test stuff will delete
+        b ="You'll have to find a way to get out of there "#Test stuff will delete
+        #self.GUI_HandlerCHC(0,a,0,b)#Test stuff will delete
         
     def start(self,name):
         #files = userFile.getFileNames() #get name of save files
@@ -154,7 +173,7 @@ class GUI_Manager:
     #Method to switch load screen to start screen
     def LoadToStart(self):
         self.loadScreen.destroy()   #Destroys loadscreen frame.
-        self.startScreen.pack()     #put start screen back into window.
+        self.main_frame.pack()     #put start screen back into window.
 
     #Method to move new game to start screen
     def GameToStart(self,window):
@@ -163,7 +182,7 @@ class GUI_Manager:
         else:
             self.options.destroy()  #destroy game option menu
         self.gameScreen.destroy()  #destroy frame holding text box
-        self.startScreen.pack() #pack start screen into main window
+        self.main_frame.pack() #pack start screen into main window
     
 
     #method that handles description keyword lines
@@ -197,14 +216,10 @@ class GUI_Manager:
     #Maybe do background frames for left and right of textbox
     #Would require the use of two files for each frame tho.
     def GUI_HandlerBKG(self,background):
-        self.back = Frame(self.gameScreen)
-        self.back.place(x=0,y=0)
-        self.test = Canvas(self.back,height = 500, width = 284,bg = "red",bd=0)
-        self.test.pack()
-        self.backR = Frame(self.gameScreen)
-        self.backR.place(x=710,y=0)
-        self.testR = Canvas(self.backR,height = 500, width = 285,bg = "red",bd=0)
-        self.testR.pack()
+        self.bkg_canvas = Canvas(bkg_frame, width = 450, height = 500)      #Set canvas for background
+        self.bkg_canvas.pack(expand = YES, fill = BOTH, side = LEFT)        #Pack canvas     
+        self.bkg = PhotoImage(file = background)                            #Set background file
+        self.bkg_canvas.create_image(0,0, image = self.bkg, anchor = NW)    #Place background on the canvas
 
     #Method for music keyword lines
     def GUI_HandlerMUS(self,music):
